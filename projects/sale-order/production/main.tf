@@ -55,7 +55,7 @@ module "app_service_backend" {
   docker_image_name = "salescontractapp.azurecr.io/sale-order-backend:latest"
   acr_login_server  = data.azurerm_container_registry.existing.login_server
   health_check_path = "/api/v1/health"
-  slot_name         = "staging"
+  slot_name         = "production"
 
   acr_resource_id = data.azurerm_container_registry.existing.id
 
@@ -78,7 +78,7 @@ module "app_service_frontend" {
   docker_image_name = "salescontractapp.azurecr.io/sale-order-web:latest"
   acr_login_server  = data.azurerm_container_registry.existing.login_server
   health_check_path = "/"
-  slot_name         = "staging"
+  slot_name         = "production"
 
   acr_resource_id = data.azurerm_container_registry.existing.id
 

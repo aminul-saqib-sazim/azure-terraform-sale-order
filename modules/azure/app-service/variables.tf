@@ -49,9 +49,9 @@ variable "startup_command" {
 }
 
 variable "slot_name" {
-  description = "Staging slot name"
+  description = "Slot name (e.g., production, staging)"
   type        = string
-  default     = "staging"
+  default     = "production"
 }
 
 variable "acr_resource_id" {

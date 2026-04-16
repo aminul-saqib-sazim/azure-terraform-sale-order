@@ -333,6 +333,34 @@ Expected: Next.js application loads
 
 ---
 
+## Step 7: Internal Container Networking
+
+See [NETWORKING.md](NETWORKING.md) for detailed information about:
+- How frontend communicates with backend
+- Database connectivity
+- Security configuration
+- Troubleshooting tips
+
+### Quick Overview
+
+| Connection | Environment Variable | Example |
+|------------|---------------------|---------|
+| Frontend → Backend | `NEXT_PUBLIC_API_BASE_URL` | `https://sale-order-backend.azurewebsites.net/api/v1/` |
+| Backend → Database | `DATABASE_URL` | From Terraform output |
+
+### CORS Configuration
+
+Add to backend `main.ts`:
+
+```typescript
+app.enableCors({
+  origin: ['https://sale-order-web.azurewebsites.net'],
+  credentials: true,
+});
+```
+
+---
+
 ## Important Notes
 
 ### Security
