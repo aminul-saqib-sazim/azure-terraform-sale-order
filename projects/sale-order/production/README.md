@@ -427,11 +427,13 @@ az webapp restart --name sale-order-web --resource-group rg-hd-sales
 
 | Resource | SKU | Estimated Cost (monthly) |
 |----------|-----|-------------------------|
-| App Service Plan | S1 (2x) | ~$146/month |
+| App Service Plan | S1 (1x shared) | ~$73/month |
 | PostgreSQL Flexible | B_Standard_B1ms | ~$30/month |
 | Application Insights | Pay-as-you-go | ~$10/month |
 | Log Analytics | PerGB2018 | ~$10/month |
-| **Total** | | **~$200/month** |
+| **Total** | | **~$123/month** |
+
+**Note:** Single shared App Service Plan for both frontend and backend for cost optimization (~50% savings).
 
 ---
 

@@ -175,11 +175,13 @@ terraform destroy
 
 | Resource | Estimated Monthly Cost |
 |----------|----------------------|
-| App Service Plans (2x S1) | ~$146 |
+| App Service Plan (1x S1 - shared) | ~$73 |
 | PostgreSQL Flexible (B1ms) | ~$30 |
 | Application Insights | ~$10 |
 | Log Analytics | ~$10 |
-| **Total** | **~$200/month** |
+| **Total** | **~$123/month** |
+
+**Note:** Single shared App Service Plan for both frontend and backend for cost optimization.
 
 ---
 

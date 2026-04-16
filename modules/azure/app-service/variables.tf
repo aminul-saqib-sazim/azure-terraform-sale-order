@@ -1,8 +1,3 @@
-variable "name" {
-  description = "Name of the service plan"
-  type        = string
-}
-
 variable "location" {
   description = "Azure location"
   type        = string
@@ -13,10 +8,9 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "sku_name" {
-  description = "SKU name for App Service Plan"
+variable "service_plan_id" {
+  description = "Service Plan ID (required)"
   type        = string
-  default     = "S1"
 }
 
 variable "app_name" {
@@ -57,6 +51,7 @@ variable "slot_name" {
 variable "acr_resource_id" {
   description = "ACR resource ID for role assignment"
   type        = string
+  default     = ""
 }
 
 variable "acr_login_server" {

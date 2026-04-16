@@ -40,16 +40,30 @@ data "azurerm_container_registry" "existing" {
 }
 
 # =============================================================================
+# Shared App Service Plan (Single Plan for Cost Optimization)
+# =============================================================================
+
+resource "azurerm_service_plan" "shared" {
+  name                = "${local.name_prefix}-sp"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  os_type             = "Linux"
+  sku_name            = var.app_service_plan_sku
+
+  tags = local.common_tags
+}
+
+# =============================================================================
 # App Service (Backend)
 # =============================================================================
 
 module "app_service_backend" {
   source = "../../../modules/azure/app-service"
 
-  name                = "${local.name_prefix}-sp"
+  service_plan_id = azurerm_service_plan.shared.id
+
   location            = var.location
   resource_group_name = var.resource_group_name
-  sku_name            = var.app_service_plan_sku
 
   app_name          = var.backend_app_name
   docker_image_name = "salescontractapp.azurecr.io/sale-order-backend:latest"
@@ -69,10 +83,10 @@ module "app_service_backend" {
 module "app_service_frontend" {
   source = "../../../modules/azure/app-service"
 
-  name                = "${local.name_prefix}-fe-sp"
+  service_plan_id = azurerm_service_plan.shared.id
+
   location            = var.location
   resource_group_name = var.resource_group_name
-  sku_name            = var.app_service_plan_sku
 
   app_name          = var.frontend_app_name
   docker_image_name = "salescontractapp.azurecr.io/sale-order-web:latest"
@@ -204,4 +218,8 @@ output "key_vault_name" {
 output "application_insights_instrumentation_key" {
   value     = azurerm_application_insights.this.instrumentation_key
   sensitive = true
+}
+
+output "app_service_plan_name" {
+  value = azurerm_service_plan.shared.name
 }
