@@ -187,7 +187,7 @@ docker build \
 docker push salescontractapp.azurecr.io/sale-order-web:latest
 ```
 
-> **Note:** Container images are already configured in Terraform - the apps will automatically pull the new images after you push them.
+> **Important:** Container image pull works automatically because ACR admin is enabled. No manual ACR credentials needed!
 
 ---
 

@@ -257,10 +257,3 @@ variable "frontend_startup_command" {
   type        = string
   default     = "yarn start"
 }
-
-variable "acr_password" {
-  description = "Azure Container Registry password for image pull"
-  type        = string
-  default     = ""
-  sensitive   = true
-}

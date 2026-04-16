@@ -117,9 +117,6 @@ module "app_service_backend" {
       ORGANIZATION_OWNER_PASSWORD             = var.organization_owner_password
       HD_HEAD_OFFICE_EMAIL                    = var.hd_head_office_email
       BETTER_AUTH_SECRET                      = var.better_auth_secret
-      DOCKER_REGISTRY_SERVER_URL              = "https://${data.azurerm_container_registry.existing.login_server}"
-      DOCKER_REGISTRY_SERVER_USERNAME         = data.azurerm_container_registry.existing.login_server
-      DOCKER_REGISTRY_SERVER_PASSWORD         = var.acr_password
     },
     var.aws_access_key_id != "" ? {} : {}
   )
@@ -149,14 +146,11 @@ module "app_service_frontend" {
   acr_resource_id = data.azurerm_container_registry.existing.id
 
   app_settings = {
-    NODE_ENV                        = "production"
-    NEXT_PUBLIC_STAGE_ENV           = "production"
-    NEXT_PUBLIC_API_BASE_URL        = "https://${local.backend_app_hostname}/api/v1/"
-    BETTER_AUTH_SECRET              = var.better_auth_secret
-    BETTER_AUTH_URL                 = "https://${local.frontend_app_hostname}"
-    DOCKER_REGISTRY_SERVER_URL      = "https://${data.azurerm_container_registry.existing.login_server}"
-    DOCKER_REGISTRY_SERVER_USERNAME = data.azurerm_container_registry.existing.login_server
-    DOCKER_REGISTRY_SERVER_PASSWORD = var.acr_password
+    NODE_ENV                 = "production"
+    NEXT_PUBLIC_STAGE_ENV    = "production"
+    NEXT_PUBLIC_API_BASE_URL = "https://${local.backend_app_hostname}/api/v1/"
+    BETTER_AUTH_SECRET       = var.better_auth_secret
+    BETTER_AUTH_URL          = "https://${local.frontend_app_hostname}"
   }
 
   tags = local.common_tags
