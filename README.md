@@ -55,19 +55,19 @@ azure-terraform-sale-order/
    cd projects/sale-order/production
    ```
 
-2. **Configure variables**
+2. **Copy and configure variables**
    ```bash
    cp terraform.tfvars.example terraform.tfvars
-   # Edit terraform.tfvars with your values
+   # Edit terraform.tfvars with your values (all environment variables included)
    ```
 
-3. **Set sensitive variables**
+3. **Set sensitive variables** (optional - can also be in tfvars)
    ```bash
    export TF_VAR_db_admin_password="YourPassword123"
    export TF_VAR_better_auth_secret="$(openssl rand -hex 32)"
    ```
 
-4. **Deploy infrastructure**
+4. **Deploy infrastructure** (all env vars auto-configured in App Service)
    ```bash
    terraform init
    terraform plan
@@ -75,45 +75,37 @@ azure-terraform-sale-order/
    ```
 
 5. **Build and deploy applications**
-   
-   See [projects/sale-order/production/README.md](projects/sale-order/production/README.md) for complete Docker build and App Service configuration steps.
+
+   See [projects/sale-order/production/README.md](projects/sale-order/production/README.md) for complete Docker build steps.
+
+> **Note:** Environment variables are now automatically configured via Terraform - no manual portal configuration needed!
 
 ---
 
-## Environment Variables Required
+## Environment Variables
+
+All environment variables are now **automatically configured via Terraform** - no manual portal configuration needed!
 
 ### For Terraform
 
-| Variable | Description | Sensitive |
-|----------|-------------|-----------|
-| `TF_VAR_db_admin_password` | Database admin password | Yes |
-| `TF_VAR_better_auth_secret` | Better Auth secret | Yes |
+| Variable | Description | Sensitive | How to Set |
+|----------|-------------|-----------|------------|
+| `TF_VAR_db_admin_password` | Database admin password | Yes | Export or in tfvars |
+| `TF_VAR_better_auth_secret` | Better Auth secret | Yes | Export or in tfvars |
 
-### For Backend App Service
+### User-Provided Variables (in terraform.tfvars)
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `NODE_ENV` | Environment | `production` |
-| `DATABASE_URL` | PostgreSQL connection | From Terraform output |
-| `BETTER_AUTH_SECRET` | Auth secret | Generated |
-| `BETTER_AUTH_URL` | Frontend URL | `https://sale-order-web.azurewebsites.net` |
-| `AWS_ACCESS_KEY_ID` | AWS access key | From AWS IAM |
-| `AWS_SECRET_ACCESS_KEY` | AWS secret key | From AWS IAM |
-| `AWS_REGION` | AWS region | `ca-central-1` |
-| `AWS_S3_BUCKET` | S3 bucket name | `sale-order-prod` |
-| `MICROSOFT_CLIENT_ID` | Azure AD client ID | From Azure Portal |
-| `MICROSOFT_CLIENT_SECRET` | Azure AD client secret | From Azure Portal |
-| `DOCUSEAL_API_KEY` | DocuSeal API key | From DocuSeal |
-| `MAILGUN_API_KEY` | Mailgun API key | From Mailgun |
+All application environment variables are configured in `terraform.tfvars`:
 
-### For Frontend App Service
+| Category | Variables |
+|----------|------------|
+| **AWS/S3** | `aws_access_key_id`, `aws_secret_access_key`, `do_spaces_bucket_name`, `do_spaces_bucket_url`, etc. |
+| **Microsoft SSO** | `microsoft_client_id`, `microsoft_client_secret`, `microsoft_tenant_id` |
+| **DocuSeal** | `docuseal_api_key`, `docuseal_webhook_secret` |
+| **Mailgun** | `mailgun_api_key`, `mailgun_domain`, `send_from_email` |
+| **Admin Accounts** | `developer_email`, `admin_email`, `organization_owner_email`, etc. |
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `NODE_ENV` | Environment | `production` |
-| `NEXT_PUBLIC_API_BASE_URL` | Backend API URL | `https://sale-order-backend.azurewebsites.net/api/v1/` |
-| `BETTER_AUTH_SECRET` | Auth secret | Same as backend |
-| `BETTER_AUTH_URL` | Frontend URL | `https://sale-order-web.azurewebsites.net` |
+All these variables are automatically applied to App Service when you run `terraform apply`.
 
 ---
 
@@ -123,12 +115,11 @@ azure-terraform-sale-order/
 
 | Resource | Name | SKU/Type |
 |----------|------|----------|
-| App Service Plan (Backend) | sale-order-prod-sp | Standard S1 |
-| App Service Plan (Frontend) | sale-order-prod-fe-sp | Standard S1 |
+| App Service Plan (Shared) | sale-order-prod-sp | Standard S1 |
 | Linux Web App (Backend) | sale-order-backend | Linux, Standard S1 |
 | Linux Web App (Frontend) | sale-order-web | Linux, Standard S1 |
-| Web App Slot (Backend) | staging | Included |
-| Web App Slot (Frontend) | staging | Included |
+| Web App Slot (Backend) | production | Included |
+| Web App Slot (Frontend) | production | Included |
 | PostgreSQL Flexible Server | sale-order-prod-db | B_Standard_B1ms |
 | Key Vault | sale-order-prod-kv | Standard |
 | Application Insights | sale-order-prod-ai | web |

@@ -23,9 +23,12 @@ resource "azurerm_linux_web_app" "this" {
     }
   }
 
-  app_settings = var.startup_command != "" ? {
-    WEBSITES_CONTAINER_START_TIME = var.startup_command
-  } : {}
+  app_settings = merge(
+    var.app_settings,
+    var.startup_command != "" ? {
+      WEBSITES_CONTAINER_START_TIME = var.startup_command
+    } : {}
+  )
 
   identity {
     type = "SystemAssigned"
@@ -60,6 +63,8 @@ resource "azurerm_linux_web_app_slot" "this" {
   identity {
     type = "SystemAssigned"
   }
+
+  app_settings = var.app_settings
 
   tags = var.tags
 }

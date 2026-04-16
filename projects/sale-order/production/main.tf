@@ -28,6 +28,9 @@ locals {
     Environment = local.environment
     ManagedBy   = "Terraform"
   }
+
+  backend_app_hostname  = "${var.backend_app_name}.azurewebsites.net"
+  frontend_app_hostname = "${var.frontend_app_name}.azurewebsites.net"
 }
 
 # =============================================================================
@@ -70,8 +73,53 @@ module "app_service_backend" {
   acr_login_server  = data.azurerm_container_registry.existing.login_server
   health_check_path = "/api/v1/health"
   slot_name         = "production"
+  startup_command   = var.backend_startup_command
 
   acr_resource_id = data.azurerm_container_registry.existing.id
+
+  app_settings = merge(
+    {
+      NODE_ENV                                = "production"
+      STAGE_ENV                               = "production"
+      BE_PORT                                 = "5000"
+      API_BASE_URL                            = "https://${local.backend_app_hostname}"
+      API_HEALTH_URL                          = "https://${local.backend_app_hostname}/api/v1/health"
+      DATABASE_URL                            = "postgresql://${var.db_admin_username}:${var.db_admin_password}@${module.database.fqdn}:5432/${var.db_name}?sslmode=require"
+      WEB_CLIENT_BASE_URL                     = "https://${local.frontend_app_hostname}"
+      BETTER_AUTH_URL                         = "https://${local.frontend_app_hostname}"
+      DO_SPACES_REGION                        = var.do_spaces_region
+      DO_SPACES_BUCKET_NAME                   = var.do_spaces_bucket_name
+      DO_SPACES_BUCKET_URL                    = var.do_spaces_bucket_url
+      DO_SPACES_ENDPOINT                      = var.do_spaces_endpoint
+      DO_SPACES_PRESIGN_URL_EXPIRY_IN_MINUTES = var.do_spaces_presign_url_expiry_in_minutes
+      AWS_ACCESS_KEY_ID                       = var.aws_access_key_id
+      AWS_SECRET_ACCESS_KEY                   = var.aws_secret_access_key
+      AWS_REGION                              = var.aws_region
+      AWS_S3_ENDPOINT                         = "https://s3.${var.aws_region}.amazonaws.com"
+      ENABLE_AUDIT_LOGGING                    = var.enable_audit_logging ? "true" : "false"
+      SESSION_EXPIRES_IN                      = var.session_expires_in
+      SESSION_UPDATE_AGE                      = var.session_update_age
+      MAGIC_LINK_EXPIRES_IN                   = var.magic_link_expires_in
+      OTP_EXPIRES_IN                          = var.otp_expires_in
+      MICROSOFT_CLIENT_ID                     = var.microsoft_client_id
+      MICROSOFT_CLIENT_SECRET                 = var.microsoft_client_secret
+      MICROSOFT_TENANT_ID                     = var.microsoft_tenant_id
+      DOCUSEAL_API_KEY                        = var.docuseal_api_key
+      DOCUSEAL_WEBHOOK_SECRET                 = var.docuseal_webhook_secret
+      MAILGUN_API_KEY                         = var.mailgun_api_key
+      MAILGUN_DOMAIN                          = var.mailgun_domain
+      SEND_FROM_EMAIL                         = var.send_from_email
+      DEVELOPER_EMAIL                         = var.developer_email
+      DEVELOPER_PASSWORD                      = var.developer_password
+      ADMIN_EMAIL                             = var.admin_email
+      ADMIN_PASSWORD                          = var.admin_password
+      ORGANIZATION_OWNER_EMAIL                = var.organization_owner_email
+      ORGANIZATION_OWNER_PASSWORD             = var.organization_owner_password
+      HD_HEAD_OFFICE_EMAIL                    = var.hd_head_office_email
+      BETTER_AUTH_SECRET                      = var.better_auth_secret
+    },
+    var.aws_access_key_id != "" ? {} : {}
+  )
 
   tags = local.common_tags
 }
@@ -93,8 +141,17 @@ module "app_service_frontend" {
   acr_login_server  = data.azurerm_container_registry.existing.login_server
   health_check_path = "/"
   slot_name         = "production"
+  startup_command   = var.frontend_startup_command
 
   acr_resource_id = data.azurerm_container_registry.existing.id
+
+  app_settings = {
+    NODE_ENV                 = "production"
+    NEXT_PUBLIC_STAGE_ENV    = "production"
+    NEXT_PUBLIC_API_BASE_URL = "https://${local.backend_app_hostname}/api/v1/"
+    BETTER_AUTH_SECRET       = var.better_auth_secret
+    BETTER_AUTH_URL          = "https://${local.frontend_app_hostname}"
+  }
 
   tags = local.common_tags
 }

@@ -65,3 +65,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "app_settings" {
+  description = "Environment variables for the app service"
+  type        = map(string)
+  default     = {}
+}
