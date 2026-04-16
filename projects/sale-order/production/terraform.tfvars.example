@@ -1,0 +1,116 @@
+# =============================================================================
+# Sale Order Production - Terraform Variables
+# =============================================================================
+#
+# INSTRUCTIONS:
+# 1. Copy this file: cp terraform.tfvars.example terraform.tfvars
+# 2. Fill in all the values below
+# 3. Sensitive values (secrets) can also be set via TF_VAR_ environment variables
+# 4. NEVER commit terraform.tfvars to version control
+#
+
+# =============================================================================
+# General Configuration
+# =============================================================================
+resource_group_name = "rg-hd-sales"
+location            = "canadacentral"
+
+# =============================================================================
+# Azure Container Registry (existing)
+# =============================================================================
+acr_name = "salescontractapp"
+
+# =============================================================================
+# App Service Plan
+# =============================================================================
+app_service_plan_sku = "S1"
+
+# =============================================================================
+# App Service names
+# =============================================================================
+backend_app_name  = "sale-order-backend"
+frontend_app_name = "sale-order-web"
+
+# =============================================================================
+# Startup Commands
+# =============================================================================
+backend_startup_command  = "yarn start:prod"
+frontend_startup_command = "yarn start"
+
+# =============================================================================
+# Database Configuration
+# =============================================================================
+db_sku_name       = "B_Standard_B1ms"
+db_storage_mb     = 32768  # 32GB for production
+db_admin_username = "saleadmin"
+db_name           = "sale_order_db"
+
+# NOTE: db_admin_password should be set via TF_VAR_db_admin_password environment variable
+# Example: export TF_VAR_db_admin_password="YourSecurePassword123!"
+
+# =============================================================================
+# Better Auth Configuration
+# =============================================================================
+# NOTE: better_auth_secret should be set via TF_VAR_better_auth_secret
+# Example: export TF_VAR_better_auth_secret="$(openssl rand -hex 32)"
+
+# =============================================================================
+# AWS S3 Storage Configuration
+# =============================================================================
+aws_region                    = "ca-central-1"
+do_spaces_region              = "ca-central-1"
+do_spaces_bucket_name         = "your-bucket-name"
+do_spaces_bucket_url          = "https://your-bucket-name.ca-central-1.digitaloceanspaces.com"
+do_spaces_endpoint            = "https://nyc3.digitaloceanspaces.com"
+do_spaces_presign_url_expiry_in_minutes = 5
+
+# AWS credentials (leave empty if using DO Spaces instead)
+aws_access_key_id     = ""
+aws_secret_access_key = ""
+
+# =============================================================================
+# Microsoft/Office 365 SSO Configuration
+# =============================================================================
+microsoft_client_id     = ""
+microsoft_client_secret = ""
+microsoft_tenant_id     = ""
+
+# =============================================================================
+# DocuSeal Configuration
+# =============================================================================
+docuseal_api_key        = ""
+docuseal_webhook_secret = ""
+
+# =============================================================================
+# Mailgun Configuration
+# =============================================================================
+mailgun_api_key  = ""
+mailgun_domain   = ""
+send_from_email  = ""
+
+# =============================================================================
+# Admin/Developer Accounts (for emergency access)
+# =============================================================================
+developer_email    = ""
+developer_password = ""  # Set via TF_VAR_developer_password
+
+admin_email    = ""
+admin_password = ""  # Set via TF_VAR_admin_password
+
+organization_owner_email    = ""
+organization_owner_password = ""  # Set via TF_VAR_organization_owner_password
+
+# =============================================================================
+# Additional Configuration
+# =============================================================================
+hd_head_office_email = ""
+
+enable_audit_logging = false
+
+# Session configuration (in seconds)
+session_expires_in  = 604800  # 7 days
+session_update_age  = 86400   # 1 day
+
+# Link expiry configuration (in seconds)
+magic_link_expires_in = 300  # 5 minutes
+otp_expires_in        = 300  # 5 minutes
