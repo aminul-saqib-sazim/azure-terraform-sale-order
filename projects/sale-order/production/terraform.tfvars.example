@@ -20,6 +20,10 @@ location            = "canadacentral"
 # =============================================================================
 acr_name = "salescontractapp"
 
+# NOTE: acr_password should be set via TF_VAR_acr_password environment variable
+# Get it from Azure Portal: Azure Container Registry -> Access keys -> Password
+# Example: export TF_VAR_acr_password="your-acr-password"
+
 # =============================================================================
 # App Service Plan
 # =============================================================================

@@ -70,28 +70,6 @@ resource "azurerm_linux_web_app_slot" "this" {
 }
 
 # =============================================================================
-# ACR Pull Role Assignment (Main App)
-# =============================================================================
-
-resource "azurerm_role_assignment" "acr_pull" {
-  count                = var.acr_resource_id != "" ? 1 : 0
-  scope                = var.acr_resource_id
-  role_definition_name = "AcrPull"
-  principal_id         = azurerm_linux_web_app.this.identity[0].principal_id
-}
-
-# =============================================================================
-# ACR Pull Role Assignment (Slot)
-# =============================================================================
-
-resource "azurerm_role_assignment" "acr_pull_slot" {
-  count                = var.acr_resource_id != "" ? 1 : 0
-  scope                = var.acr_resource_id
-  role_definition_name = "AcrPull"
-  principal_id         = azurerm_linux_web_app_slot.this.identity[0].principal_id
-}
-
-# =============================================================================
 # Outputs
 # =============================================================================
 

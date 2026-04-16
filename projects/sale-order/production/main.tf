@@ -72,7 +72,7 @@ module "app_service_backend" {
   docker_image_name = "salescontractapp.azurecr.io/sale-order-backend:latest"
   acr_login_server  = data.azurerm_container_registry.existing.login_server
   health_check_path = "/api/v1/health"
-  slot_name         = "production"
+  slot_name         = "prod"
   startup_command   = var.backend_startup_command
 
   acr_resource_id = data.azurerm_container_registry.existing.id
@@ -117,6 +117,9 @@ module "app_service_backend" {
       ORGANIZATION_OWNER_PASSWORD             = var.organization_owner_password
       HD_HEAD_OFFICE_EMAIL                    = var.hd_head_office_email
       BETTER_AUTH_SECRET                      = var.better_auth_secret
+      DOCKER_REGISTRY_SERVER_URL              = "https://${data.azurerm_container_registry.existing.login_server}"
+      DOCKER_REGISTRY_SERVER_USERNAME         = data.azurerm_container_registry.existing.login_server
+      DOCKER_REGISTRY_SERVER_PASSWORD         = var.acr_password
     },
     var.aws_access_key_id != "" ? {} : {}
   )
@@ -140,17 +143,20 @@ module "app_service_frontend" {
   docker_image_name = "salescontractapp.azurecr.io/sale-order-web:latest"
   acr_login_server  = data.azurerm_container_registry.existing.login_server
   health_check_path = "/"
-  slot_name         = "production"
+  slot_name         = "prod"
   startup_command   = var.frontend_startup_command
 
   acr_resource_id = data.azurerm_container_registry.existing.id
 
   app_settings = {
-    NODE_ENV                 = "production"
-    NEXT_PUBLIC_STAGE_ENV    = "production"
-    NEXT_PUBLIC_API_BASE_URL = "https://${local.backend_app_hostname}/api/v1/"
-    BETTER_AUTH_SECRET       = var.better_auth_secret
-    BETTER_AUTH_URL          = "https://${local.frontend_app_hostname}"
+    NODE_ENV                        = "production"
+    NEXT_PUBLIC_STAGE_ENV           = "production"
+    NEXT_PUBLIC_API_BASE_URL        = "https://${local.backend_app_hostname}/api/v1/"
+    BETTER_AUTH_SECRET              = var.better_auth_secret
+    BETTER_AUTH_URL                 = "https://${local.frontend_app_hostname}"
+    DOCKER_REGISTRY_SERVER_URL      = "https://${data.azurerm_container_registry.existing.login_server}"
+    DOCKER_REGISTRY_SERVER_USERNAME = data.azurerm_container_registry.existing.login_server
+    DOCKER_REGISTRY_SERVER_PASSWORD = var.acr_password
   }
 
   tags = local.common_tags
@@ -173,32 +179,6 @@ module "database" {
   database_name       = var.db_name
 
   tags = local.common_tags
-}
-
-# =============================================================================
-# Key Vault
-# =============================================================================
-
-resource "azurerm_key_vault" "this" {
-  name                = "${local.name_prefix}-kv"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  tenant_id           = data.azurerm_client_config.current.tenant_id
-  sku_name            = "standard"
-
-  tags = local.common_tags
-}
-
-resource "azurerm_key_vault_secret" "db_password" {
-  name         = "db-password"
-  value        = var.db_admin_password
-  key_vault_id = azurerm_key_vault.this.id
-}
-
-resource "azurerm_key_vault_secret" "better_auth_secret" {
-  name         = "better-auth-secret"
-  value        = var.better_auth_secret
-  key_vault_id = azurerm_key_vault.this.id
 }
 
 # =============================================================================
@@ -266,10 +246,6 @@ output "db_connection_string" {
 
 output "acr_login_server" {
   value = data.azurerm_container_registry.existing.login_server
-}
-
-output "key_vault_name" {
-  value = azurerm_key_vault.this.name
 }
 
 output "application_insights_instrumentation_key" {

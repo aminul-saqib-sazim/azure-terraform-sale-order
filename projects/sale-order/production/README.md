@@ -130,13 +130,13 @@ terraform apply
 
 This will create:
 - ✅ Shared App Service Plan (S1)
-- ✅ Backend Linux Web App with production slot
-- ✅ Frontend Linux Web App with production slot
+- ✅ Backend Linux Web App with prod slot
+- ✅ Frontend Linux Web App with prod slot
 - ✅ PostgreSQL Flexible Server
-- ✅ Key Vault
 - ✅ Application Insights
 - ✅ Log Analytics Workspace
 - ✅ **All environment variables** automatically configured in App Service
+- ✅ ACR credentials for image pull (via app_settings)
 
 ### 3.4 Note the outputs
 

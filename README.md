@@ -118,10 +118,9 @@ All these variables are automatically applied to App Service when you run `terra
 | App Service Plan (Shared) | sale-order-prod-sp | Standard S1 |
 | Linux Web App (Backend) | sale-order-backend | Linux, Standard S1 |
 | Linux Web App (Frontend) | sale-order-web | Linux, Standard S1 |
-| Web App Slot (Backend) | production | Included |
-| Web App Slot (Frontend) | production | Included |
+| Web App Slot (Backend) | prod | Included |
+| Web App Slot (Frontend) | prod | Included |
 | PostgreSQL Flexible Server | sale-order-prod-db | B_Standard_B1ms |
-| Key Vault | sale-order-prod-kv | Standard |
 | Application Insights | sale-order-prod-ai | web |
 | Log Analytics Workspace | sale-order-prod-law | PerGB2018 |
 
