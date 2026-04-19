@@ -41,6 +41,15 @@ backend_startup_command  = "yarn start:prod"
 frontend_startup_command = "yarn start"
 
 # =============================================================================
+# Docker Image Tags
+# =============================================================================
+# Update these tags when deploying new images
+# For CI/CD: use git SHA (e.g., abc1234) from GitHub Actions
+# Example: backend_image_tag = "${{ github.sha }}"
+backend_image_tag  = "latest"
+frontend_image_tag = "latest"
+
+# =============================================================================
 # Database Configuration
 # =============================================================================
 db_sku_name       = "B_Standard_B1ms"

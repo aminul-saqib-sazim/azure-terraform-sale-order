@@ -17,7 +17,7 @@ resource "azurerm_linux_web_app" "this" {
     dynamic "application_stack" {
       for_each = var.docker_image_name != "" ? [1] : []
       content {
-        docker_image_name   = var.docker_image_name
+        docker_image_name   = var.docker_image_tag != "" ? "${var.docker_image_name}:${var.docker_image_tag}" : var.docker_image_name
         docker_registry_url = var.acr_login_server != "" ? "https://${var.acr_login_server}" : null
       }
     }

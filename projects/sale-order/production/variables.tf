@@ -257,3 +257,15 @@ variable "frontend_startup_command" {
   type        = string
   default     = "yarn start"
 }
+
+variable "backend_image_tag" {
+  description = "Docker image tag for backend (use git SHA from CI/CD pipeline)"
+  type        = string
+  default     = "latest"
+}
+
+variable "frontend_image_tag" {
+  description = "Docker image tag for frontend (use git SHA from CI/CD pipeline)"
+  type        = string
+  default     = "latest"
+}

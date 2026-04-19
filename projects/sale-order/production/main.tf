@@ -69,7 +69,8 @@ module "app_service_backend" {
   resource_group_name = var.resource_group_name
 
   app_name          = var.backend_app_name
-  docker_image_name = "salescontractapp.azurecr.io/sale-order-backend:latest"
+  docker_image_name = "sale-order-backend"
+  docker_image_tag  = var.backend_image_tag
   acr_login_server  = data.azurerm_container_registry.existing.login_server
   health_check_path = "/api/v1/health"
   slot_name         = "prod"
@@ -137,7 +138,8 @@ module "app_service_frontend" {
   resource_group_name = var.resource_group_name
 
   app_name          = var.frontend_app_name
-  docker_image_name = "salescontractapp.azurecr.io/sale-order-web:latest"
+  docker_image_name = "sale-order-web"
+  docker_image_tag  = var.frontend_image_tag
   acr_login_server  = data.azurerm_container_registry.existing.login_server
   health_check_path = "/"
   slot_name         = "prod"
@@ -154,6 +156,24 @@ module "app_service_frontend" {
   }
 
   tags = local.common_tags
+}
+
+# =============================================================================
+# ACR Pull Role Assignments
+# =============================================================================
+
+resource "azurerm_role_assignment" "backend_acr_pull" {
+  count                = 1
+  scope                = data.azurerm_container_registry.existing.id
+  role_definition_name = "AcrPull"
+  principal_id         = module.app_service_backend.principal_id
+}
+
+resource "azurerm_role_assignment" "frontend_acr_pull" {
+  count                = 1
+  scope                = data.azurerm_container_registry.existing.id
+  role_definition_name = "AcrPull"
+  principal_id         = module.app_service_frontend.principal_id
 }
 
 # =============================================================================
