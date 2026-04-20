@@ -197,14 +197,8 @@ variable "admin_password" {
   sensitive   = true
 }
 
-variable "organization_owner_email" {
-  description = "Organization owner email"
-  type        = string
-  default     = ""
-}
-
-variable "organization_owner_password" {
-  description = "Organization owner password"
+variable "canada_post_api_key" {
+  description = "Canada Post API key"
   type        = string
   default     = ""
   sensitive   = true
@@ -259,13 +253,13 @@ variable "frontend_startup_command" {
 }
 
 variable "backend_image_tag" {
-  description = "Docker image tag for backend (use git SHA from CI/CD pipeline)"
+  description = "Docker image tag for backend (use git TAG from CI/CD pipeline)"
   type        = string
   default     = "latest"
 }
 
 variable "frontend_image_tag" {
-  description = "Docker image tag for frontend (use git SHA from CI/CD pipeline)"
+  description = "Docker image tag for frontend (use git TAG from CI/CD pipeline)"
   type        = string
   default     = "latest"
 }

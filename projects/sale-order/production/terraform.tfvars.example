@@ -44,7 +44,7 @@ frontend_startup_command = "yarn start"
 # Docker Image Tags
 # =============================================================================
 # Update these tags when deploying new images
-# For CI/CD: use git SHA (e.g., abc1234) from GitHub Actions
+# For CI/CD: use git TAG (e.g., abc1234) from GitHub Actions
 # Example: backend_image_tag = "${{ github.sha }}"
 backend_image_tag  = "latest"
 frontend_image_tag = "latest"
@@ -109,8 +109,7 @@ developer_password = ""  # Set via TF_VAR_developer_password
 admin_email    = ""
 admin_password = ""  # Set via TF_VAR_admin_password
 
-organization_owner_email    = ""
-organization_owner_password = ""  # Set via TF_VAR_organization_owner_password
+canada_post_api_key = "value"
 
 # =============================================================================
 # Additional Configuration

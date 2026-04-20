@@ -85,7 +85,7 @@ Open `terraform.tfvars` and fill in all the values. The file includes:
 - **Microsoft SSO**: microsoft_client_id, microsoft_client_secret, microsoft_tenant_id
 - **DocuSeal**: docuseal_api_key, docuseal_webhook_secret
 - **Mailgun**: mailgun_api_key, mailgun_domain, send_from_email
-- **Admin Accounts**: developer_email, admin_email, organization_owner_email, etc.
+- **Admin Accounts**: developer_email, admin_email, etc.
 
 ### 2.3 Set Sensitive Variables
 

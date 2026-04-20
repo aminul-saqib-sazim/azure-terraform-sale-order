@@ -114,9 +114,8 @@ module "app_service_backend" {
       DEVELOPER_PASSWORD                      = var.developer_password
       ADMIN_EMAIL                             = var.admin_email
       ADMIN_PASSWORD                          = var.admin_password
-      ORGANIZATION_OWNER_EMAIL                = var.organization_owner_email
-      ORGANIZATION_OWNER_PASSWORD             = var.organization_owner_password
       HD_HEAD_OFFICE_EMAIL                    = var.hd_head_office_email
+      CANADA_POST_API_KEY                     = var.canada_post_api_key
       BETTER_AUTH_SECRET                      = var.better_auth_secret
     },
     var.aws_access_key_id != "" ? {} : {}
