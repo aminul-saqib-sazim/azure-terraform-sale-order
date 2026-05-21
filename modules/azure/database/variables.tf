@@ -31,6 +31,13 @@ variable "storage_mb" {
   default     = 32768
 }
 
+variable "zone" {
+  description = "Availability zone for the PostgreSQL server"
+  type        = string
+  default     = null
+  nullable    = true
+}
+
 variable "admin_username" {
   description = "Administrator username"
   type        = string
@@ -81,4 +88,13 @@ variable "tags" {
   description = "Tags for resources"
   type        = map(string)
   default     = {}
+}
+
+variable "extra_firewall_rules" {
+  description = "Additional firewall rules keyed by rule name"
+  type = map(object({
+    start_ip_address = string
+    end_ip_address   = string
+  }))
+  default = {}
 }

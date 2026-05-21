@@ -10,6 +10,7 @@ resource "azurerm_postgresql_flexible_server" "this" {
   version    = var.pg_version
   sku_name   = var.sku_name
   storage_mb = var.storage_mb
+  zone       = var.zone
 
   administrator_login    = var.admin_username
   administrator_password = var.admin_password
@@ -17,6 +18,10 @@ resource "azurerm_postgresql_flexible_server" "this" {
   public_network_access_enabled = var.public_network_access_enabled
 
   backup_retention_days = var.backup_retention_days
+
+  lifecycle {
+    ignore_changes = [administrator_password]
+  }
 
   tags = var.tags
 }
@@ -40,6 +45,14 @@ resource "azurerm_postgresql_flexible_server_firewall_rule" "azure_services" {
   server_id        = azurerm_postgresql_flexible_server.this.id
   start_ip_address = "0.0.0.0"
   end_ip_address   = "0.0.0.0"
+}
+
+resource "azurerm_postgresql_flexible_server_firewall_rule" "extra" {
+  for_each         = var.extra_firewall_rules
+  name             = each.key
+  server_id        = azurerm_postgresql_flexible_server.this.id
+  start_ip_address = each.value.start_ip_address
+  end_ip_address   = each.value.end_ip_address
 }
 
 # =============================================================================
