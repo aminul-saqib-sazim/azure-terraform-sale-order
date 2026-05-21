@@ -12,7 +12,7 @@ This repository contains Terraform configurations to deploy the Sale Order full-
 | **Backend** | App Service (Linux) | NestJS API |
 | **Database** | PostgreSQL Flexible Server | Managed PostgreSQL |
 | **Storage** | Azure Container Registry | Docker image storage |
-| **Secrets** | Key Vault | Secure secret storage |
+| **Secrets** | App Service settings + local tfvars | Production secrets are kept out of git |
 | **Monitoring** | Application Insights + Log Analytics | Observability |
 
 ---
@@ -21,19 +21,23 @@ This repository contains Terraform configurations to deploy the Sale Order full-
 
 ```
 azure-terraform-sale-order/
-├── modules/                              # Reusable Terraform modules
-│   └── azure/
-│       ├── app-service/                  # App Service + Plan + Slot
-│       └── database/                    # PostgreSQL Flexible Server
+├── modules/                              # Provider-specific reusable modules
+│   ├── azure/
+│   │   ├── app-service/
+│   │   └── database/
+│   ├── aws/
+│   └── gcp/
 │
-├── projects/                            # Project-specific configurations
-│   └── sale-order/
-│       └── production/
-│           ├── main.tf                  # Main configuration
-│           ├── variables.tf             # Variable definitions
-│           ├── terraform.tfvars.example # Example variables
-│           ├── README.md                # Deployment guide
-│           └── outputs.tf               # Output values
+├── stacks/                               # Deployable stacks by provider/app/env
+│   ├── azure/
+│   │   └── sale-order/
+│   │       └── production/
+│   │           ├── main.tf
+│   │           ├── variables.tf
+│   │           ├── terraform.tfvars.example
+│   │           └── README.md
+│   ├── aws/
+│   └── gcp/
 │
 └── README.md                            # This file
 ```
@@ -52,7 +56,7 @@ azure-terraform-sale-order/
 
 1. **Navigate to production directory**
    ```bash
-   cd projects/sale-order/production
+   cd stacks/azure/sale-order/production
    ```
 
 2. **Copy and configure variables**
@@ -75,10 +79,10 @@ azure-terraform-sale-order/
    ```
 
 5. **Build and deploy applications**
+    
+   See [stacks/azure/sale-order/production/README.md](stacks/azure/sale-order/production/README.md) for complete Docker build and App Service configuration steps.
 
-   See [projects/sale-order/production/README.md](projects/sale-order/production/README.md) for complete Docker build steps.
-
-> **Note:** Environment variables are now automatically configured via Terraform - no manual portal configuration needed!
+> **Note:** Environment variables are now automatically configured via Terraform. No manual portal configuration is required.
 
 ---
 
@@ -115,7 +119,8 @@ All these variables are automatically applied to App Service when you run `terra
 
 | Resource | Name | SKU/Type |
 |----------|------|----------|
-| App Service Plan (Shared) | sale-order-prod-sp | Standard S1 |
+| App Service Plan | sale-order-prod-sp | Standard S1 |
+| Azure Container Registry | salescontractapp | Basic |
 | Linux Web App (Backend) | sale-order-backend | Linux, Standard S1 |
 | Linux Web App (Frontend) | sale-order-web | Linux, Standard S1 |
 | Web App Slot (Backend) | prod | Included |
@@ -130,7 +135,7 @@ All these variables are automatically applied to App Service when you run `terra
 
 | Document | Description |
 |----------|-------------|
-| [projects/sale-order/production/README.md](projects/sale-order/production/README.md) | Detailed deployment guide |
+| [stacks/azure/sale-order/production/README.md](stacks/azure/sale-order/production/README.md) | Detailed deployment guide |
 | [../../azure-migration-plan.md](../../azure-migration-plan.md) | Migration plan from DigitalOcean |
 
 ---
@@ -140,7 +145,7 @@ All these variables are automatically applied to App Service when you run `terra
 ### View Outputs After Deployment
 
 ```bash
-cd projects/sale-order/production
+cd stacks/azure/sale-order/production
 terraform output
 ```
 
@@ -155,7 +160,7 @@ terraform apply
 ### Destroy All Resources
 
 ```bash
-cd projects/sale-order/production
+cd stacks/azure/sale-order/production
 terraform destroy
 ```
 
@@ -165,20 +170,21 @@ terraform destroy
 
 | Resource | Estimated Monthly Cost |
 |----------|----------------------|
-| App Service Plan (1x S1 - shared) | ~$73 |
+| App Service Plan (1x S1) | ~$73 |
 | PostgreSQL Flexible (B1ms) | ~$30 |
+| Azure Container Registry (Basic) | ~$5 |
 | Application Insights | ~$10 |
 | Log Analytics | ~$10 |
-| **Total** | **~$123/month** |
+| **Total** | **~$130/month** |
 
-**Note:** Single shared App Service Plan for both frontend and backend for cost optimization.
+**Note:** A single shared App Service Plan is used for both frontend and backend.
 
 ---
 
 ## Security Best Practices
 
 1. **Never commit terraform.tfvars** - Add to `.gitignore`
-2. **Use Azure Key Vault** - Store secrets in KV for production
+2. **Keep tfvars local** - Store production secrets in ignored `terraform.tfvars`
 3. **Enable Managed Identity** - Already configured for ACR pull
 4. **Use RBAC** - Assign minimum required roles
 
@@ -194,7 +200,7 @@ az account set --subscription "Azure subscription 1"
 
 ### Terraform Init Fails
 ```bash
-cd projects/sale-order/production
+cd stacks/azure/sale-order/production
 rm -rf .terraform
 terraform init
 ```
