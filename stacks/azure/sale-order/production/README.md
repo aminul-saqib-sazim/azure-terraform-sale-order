@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide provides step-by-step instructions to deploy the Sale Order full-stack application to Azure App Service.
+This guide provides step-by-step instructions to manage the Sale Order Azure production stack from the provider-scoped Terraform root.
 
 ### Architecture
 

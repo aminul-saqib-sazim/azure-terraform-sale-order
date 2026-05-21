@@ -1,8 +1,8 @@
-# Azure Terraform Infrastructure for Sale Order Application
+# Terraform Infrastructure for Sale Order Application
 
 ## Purpose
 
-This repository contains Terraform configurations to deploy the Sale Order full-stack application to Azure App Service.
+This repository contains Terraform configurations for the Sale Order infrastructure, with the current production stack implemented on Azure and a provider-scoped layout for future expansion.
 
 ### What's Deployed
 
@@ -26,17 +26,26 @@ azure-terraform-sale-order/
 │   │   ├── app-service/
 │   │   └── database/
 │   ├── aws/
+│   ├── digitalocean/
 │   └── gcp/
 │
 ├── stacks/                               # Deployable stacks by provider/app/env
 │   ├── azure/
 │   │   └── sale-order/
 │   │       └── production/
-│   │           ├── main.tf
+│   │           ├── providers.tf
+│   │           ├── locals.tf
+│   │           ├── container_registry.tf
+│   │           ├── app_services.tf
+│   │           ├── domains.tf
+│   │           ├── database.tf
+│   │           ├── monitoring.tf
+│   │           ├── outputs.tf
 │   │           ├── variables.tf
 │   │           ├── terraform.tfvars.example
 │   │           └── README.md
 │   ├── aws/
+│   ├── digitalocean/
 │   └── gcp/
 │
 └── README.md                            # This file
@@ -152,7 +161,7 @@ terraform output
 ### Update Infrastructure
 
 ```bash
-# Make changes to main.tf or variables
+# Make changes to stack files or variables
 terraform plan
 terraform apply
 ```
