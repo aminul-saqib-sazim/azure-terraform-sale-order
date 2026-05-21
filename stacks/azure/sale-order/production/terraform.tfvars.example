@@ -1,0 +1,30 @@
+# Core secrets
+db_admin_password  = "replace-with-current-db-admin-password"
+better_auth_secret = "replace-with-current-better-auth-secret"
+acr_admin_password = "replace-with-current-acr-admin-password"
+
+# These maps let Terraform match the live Azure Portal app settings
+# without committing production secrets into source control.
+
+backend_app_settings_overrides = {
+  CANADA_POST_API_KEY     = "replace-with-current-value"
+  DO_SPACES_ACCESS_KEY    = "replace-with-current-value"
+  DO_SPACES_SECRET_KEY    = "replace-with-current-value"
+  DOCUSEAL_API_KEY        = "replace-with-current-value"
+  DOCUSEAL_WEBHOOK_SECRET = "replace-with-current-value"
+  MAILGUN_API_KEY         = "replace-with-current-value"
+  MICROSOFT_CLIENT_ID     = "replace-with-current-value"
+  MICROSOFT_CLIENT_SECRET = "replace-with-current-value"
+}
+
+backend_slot_app_settings_overrides = {
+  DOCUSEAL_API_KEY        = "replace-with-current-slot-value"
+  DOCUSEAL_WEBHOOK_SECRET = "replace-with-current-slot-value"
+}
+
+frontend_app_settings_overrides = {}
+
+frontend_slot_app_settings_overrides = {}
+
+backend_cd_webhook_url  = "replace-with-backend-cd-webhook-url"
+frontend_cd_webhook_url = "replace-with-frontend-cd-webhook-url"
