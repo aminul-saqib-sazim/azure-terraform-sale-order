@@ -4,6 +4,8 @@
 
 This guide provides step-by-step instructions to manage the Sale Order Azure production stack from the provider-scoped Terraform root.
 
+> **Secret Management Note:** The current production stack still uses App Service settings and local ignored `terraform.tfvars` values for secrets. This is a transitional setup. The desired end state is to store production secrets in Azure Key Vault and have Terraform reference those secrets rather than carrying secret values in local tfvars.
+
 ### Architecture
 
 ```

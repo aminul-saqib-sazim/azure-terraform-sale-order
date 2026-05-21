@@ -12,7 +12,7 @@ This repository contains Terraform configurations for the Sale Order infrastruct
 | **Backend** | App Service (Linux) | NestJS API |
 | **Database** | PostgreSQL Flexible Server | Managed PostgreSQL |
 | **Storage** | Azure Container Registry | Docker image storage |
-| **Secrets** | App Service settings + local tfvars | Production secrets are kept out of git |
+| **Secrets** | App Service settings + local tfvars | Current state keeps production secrets out of git; target state should move them into Key Vault |
 | **Monitoring** | Application Insights + Log Analytics | Observability |
 
 ---
@@ -92,6 +92,8 @@ azure-terraform-sale-order/
    See [stacks/azure/sale-order/production/README.md](stacks/azure/sale-order/production/README.md) for complete Docker build and App Service configuration steps.
 
 > **Note:** Environment variables are now automatically configured via Terraform. No manual portal configuration is required.
+
+> **Secret Management Note:** The current production stack still relies on App Service settings and local ignored `terraform.tfvars` values for secrets. This should be treated as transitional. The target state is to move production secrets into Azure Key Vault and have Terraform reference them there instead of keeping secret values in local tfvars.
 
 ---
 
