@@ -12,6 +12,7 @@ crash.log
 
 # Sensitive files
 *.tfvars
+spec_docs/
 
 # Override files
 override.tf
